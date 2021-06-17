@@ -1,6 +1,7 @@
 <template>
     <div class="demo-split">
         <Button type="primary" v-on:click="transhandler">翻译</Button>
+        <Button type="primary" v-on:click="convertpdf">导出为pdf</Button>
         <!--<Button type="primary" v-on:click="changer">{{change_text}}</Button>-->
         <Split v-model="split1" :mode="mode">
             <div :slot="artical_state" class="demo-split-pane">
@@ -426,6 +427,9 @@
                         this.remove(this.Tags_index[id])
                     }
                 })
+            },
+            convertpdf(){
+                window.open("http://coolaf.com/tool/md");
             }
         }
     }
