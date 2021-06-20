@@ -33,6 +33,11 @@
 6. 点击翻译-将每一个单词翻译结果追加到md文件中
 7. 放到转换的在线工具(http://coolaf.com/tool/md)中-导出为pdf
 
+# 效果图
+![高亮单词](./image/highword.png)
+
+![单词解释](./image/ex.jpg)
+
 # todo
 
 [ ] 高亮还原
