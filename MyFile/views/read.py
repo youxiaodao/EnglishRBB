@@ -155,7 +155,8 @@ def word_del(request, id):
 def get_trans(request, id):
     try:
         from ECDICT.stardict import StarDict
-        MyDict = StarDict('D:\\any_code\EnglishRBB\ECDICT\stardict.db')
+        path = settings.BASE_DIR + '/ECDICT/stardict.db'
+        MyDict = StarDict(path)
         words = MyWord.objects.filter(file_id=id).values_list('name', flat=True)  # values_list('number', flat=True)
         res = MyDict.query_batch(list(words))
     except Exception as e:
