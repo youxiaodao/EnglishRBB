@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 
 from MyFile.models import UploadFile, MyRead
 class FileAdmin(admin.ModelAdmin):
-    list_display = ['name', 'go_reading']
+    list_display = ['name', 'create_operator', 'create_time', 'go_reading']
     search_fields = ['name']
     # def save_model(self, request, obj, form, change):
     #     print(obj)
@@ -25,4 +25,4 @@ class FileAdmin(admin.ModelAdmin):
 # Register your models here.
 
 admin.site.register(UploadFile, FileAdmin)
-admin.site.register(MyRead)
+# admin.site.register(MyRead)

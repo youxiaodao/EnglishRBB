@@ -41,6 +41,9 @@ class UploadFile(CachingModel):
     readed_html = models.ForeignKey(to=MyRead, on_delete=models.DO_NOTHING, null=True,blank=True)
     text = models.TextField(verbose_name='markdown', default='', null=True, blank=True)
 
+    class Meta:
+        verbose_name_plural = '阅读材料'
+        verbose_name = '阅读材料'
 
 class MyWord(CachingModel):
     name = models.CharField(verbose_name='单词', max_length=100, null=True, blank=True,)
