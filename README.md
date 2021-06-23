@@ -45,9 +45,9 @@
 
 ![单词解释](./image/ex.jpg)
 
-![单词填空](./image/word1.jpg)
+![单词填空](./image/word1.png)
 
-![单词连线](./image/word2.jpg)
+![单词连线](./image/word2.png)
 
 # todo
 
