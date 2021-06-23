@@ -269,7 +269,6 @@
             hoveredTipId = null;
         }
     });
-    console.log(query);
     highlighter.run();
     
 
@@ -361,14 +360,19 @@
                     '| 1    | Lemma 的变换形式，比如 s 代表 apples 是其 lemma 的复数形式 |\n\n'
                 });
 
+                var words = []
+                var trans = []
                 Vue.http.get(url).then(res=>{
                     const result = res.body.result;
-
                     this.text += '\n|单词|解释|\n' +
                         '|---|---|\n'
                     result.map(item=>{
                         if(item != null) {
-                            this.text += `|${item['word']}|${item['translation'].replace(/\n/g,"<br>")}|\n`
+                            var word = item['word']
+                            var tran = item['translation']
+                            words.push(word)
+                            trans.push(tran)
+                            this.text += `|${word}|${tran.replace(/\n/g,"<br>")}|\n`
                         }
                     })
 
@@ -385,10 +389,56 @@
                             }
                             this.text += '```\n'
                         }
-
                     })
+
+                    this.text += '### 单词填空游戏\n\n';
+                    this.text += '\n|单词|解释|\n' +
+                        '|---|---|\n'
+                    result.map(item=>{
+                        if(item != null) {
+                            let word = item['word']
+                            var word_len = word.length
+                            console.log(word_len)
+                            var count_  = Math.floor(word_len/2)
+                            console.log(count_)
+                            for(var i =0; i< count_; i++){
+                                var random_i = Math.floor(Math.random() * (word_len + 1));
+                                if(random_i<=word_len){
+                                    word = this.changeStr(word, random_i, '_')
+                                }
+                            }
+                            var tran = item['translation']
+                            this.text += `|${word}|${tran.replace(/\n/g,"<br>")}|\n`
+                        }
+                    })
+
+                    this.text += '\n'
+                    this.text += '### 单词连线游戏\n\n';
+                    var new_words = this.shuffle(words);
+                    var new_trans = this.shuffle(trans);
+                    var words_len = new_words.length;
+                    this.text += '\n|单词|解释|\n' +
+                        '|---|---|\n'
+                    for(var j=0; j< words_len;j++){
+
+                        this.text += `|${new_words[j]}|${new_trans[j].replace(/\n/g,"<br>")}|\n`
+                    }
                 })
             },
+            shuffle(arr) {
+                for (let i=arr.length-1; i>=0; i--) {
+                    let rIndex = Math.floor(Math.random()*(i+1));
+                    // 打印交换值
+                    // console.log(i, rIndex);
+                    let temp = arr[rIndex];
+                    arr[rIndex] = arr[i];
+                    arr[i] = temp;
+                }
+                return arr;
+            },
+            changeStr(str,index,changeStr){
+                 return str.substr(0, index) + changeStr+ str.substr(index + changeStr.length);
+             },
             changer() {
                 const text = this.change_text;
                 if(text == '上下切换'){
