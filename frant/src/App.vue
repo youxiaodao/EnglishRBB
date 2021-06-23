@@ -372,7 +372,7 @@
                             var tran = item['translation']
                             words.push(word)
                             trans.push(tran)
-                            this.text += `|${word}|${tran.replace(/\n/g,"<br>")}|${item['definition'].replace(/\n/g,"<br>")}|\n`
+                            this.text += `|${word}|${tran.replace(/\n/g," ")}|${item['definition'].replace(/\n/g," ")}|\n`
                         }
                     })
 
@@ -408,7 +408,7 @@
                                 }
                             }
                             var tran = item['translation']
-                            this.text += `|${word}|${tran.replace(/\n/g,"<br>")}|\n`
+                            this.text += `|${word}|${tran.replace(/\n/g," ")}|\n`
                         }
                     })
 
