@@ -364,32 +364,32 @@
                 var trans = []
                 Vue.http.get(url).then(res=>{
                     const result = res.body.result;
-                    this.text += '\n|单词|解释|\n' +
-                        '|---|---|\n'
+                    this.text += '\n|单词|解释|英文解释\n' +
+                        '|---|---|---|\n'
                     result.map(item=>{
                         if(item != null) {
                             var word = item['word']
                             var tran = item['translation']
                             words.push(word)
                             trans.push(tran)
-                            this.text += `|${word}|${tran.replace(/\n/g,"<br>")}|\n`
+                            this.text += `|${word}|${tran.replace(/\n/g,"<br>")}|${item['definition'].replace(/\n/g,"<br>")}|\n`
                         }
                     })
 
                     this.text += '\n'
-                    result.map(item=>{
-                        if(item != null){
-                            this.text += '```\n';
-                            for(var i in item){
-                                if(i == 'id' || i == 'sw' || i == 'audio' || i == 'phonetic'){
-                                    console.log(i)
-                                } else {
-                                    this.text += `${i}: ${item[i]}\n`
-                                }
-                            }
-                            this.text += '```\n'
-                        }
-                    })
+                    // result.map(item=>{
+                    //     if(item != null){
+                    //         this.text += '```\n';
+                    //         for(var i in item){
+                    //             if(i == 'id' || i == 'sw' || i == 'audio' || i == 'phonetic'){
+                    //                 console.log(i)
+                    //             } else {
+                    //                 this.text += `${i}: ${item[i]}\n`
+                    //             }
+                    //         }
+                    //         this.text += '```\n'
+                    //     }
+                    // })
 
                     this.text += '### 单词填空游戏\n\n';
                     this.text += '\n|单词|解释|\n' +
