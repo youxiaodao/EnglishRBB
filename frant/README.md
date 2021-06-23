@@ -13,7 +13,14 @@ yarn serve
 ### Compiles and minifies for production
 ```
 yarn build
+# or
+npm run build
+npm  install -g serve
+serve dist -p 8081
 ```
+
+
+
 
 ### Lints and fixes files
 ```
@@ -27,3 +34,4 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ```
 npm run servr
 ```
+
