@@ -10,6 +10,9 @@ import traceback
 from MyFile.models import UploadFile, MyWord
 import urllib
 import importlib, sys
+from whoosh.index import open_dir
+from whoosh.qparser import MultifieldParser
+from whoosh.qparser import QueryParser
 
 importlib.reload(sys)
 from pdfminer.pdfparser import PDFParser, PDFDocument
@@ -18,6 +21,7 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.layout import LTTextBoxHorizontal, LAParams
 from pdfminer.pdfinterp import PDFTextExtractionNotAllowed
+from django.contrib.auth.decorators import login_required
 
 
 def parse(DataIO, save_path):
@@ -68,6 +72,7 @@ def parse(DataIO, save_path):
 
 read_page = 2
 
+@login_required
 def reading(request, id):
     try:
         file_obj = UploadFile.objects.get(id=id)
@@ -85,7 +90,7 @@ def reading(request, id):
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return HttpResponse(res, headers={"Access-Control-Allow-Origin": "*"})
 
-
+@login_required
 def mark_save(request, id):
     try:
         file_obj = UploadFile.objects.get(id=id)
@@ -99,7 +104,7 @@ def mark_save(request, id):
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return HttpResponse('ok', headers={"Access-Control-Allow-Origin": "*"})
 
-
+@login_required
 def search_word(request, id):
     text = request.POST.get('text', None)
     print(text)
@@ -113,7 +118,7 @@ def search_word(request, id):
         'result': res,
         'status': 'ok'
     }, headers={"Access-Control-Allow-Origin": "*"})
-
+@login_required
 def word_save(request, id):
     """
 
@@ -134,7 +139,7 @@ def word_save(request, id):
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return HttpResponse('ok', headers={"Access-Control-Allow-Origin": "*"})
 
-
+@login_required
 def word_del(request, id):
     """
 
@@ -151,7 +156,7 @@ def word_del(request, id):
         traceback.print_exc()
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return HttpResponse('ok', headers={"Access-Control-Allow-Origin": "*"})
-
+@login_required
 def get_trans(request, id):
     try:
         from ECDICT.stardict import StarDict
@@ -167,7 +172,7 @@ def get_trans(request, id):
         'status': 'ok'
     }, headers={"Access-Control-Allow-Origin": "*"})
 
-
+@login_required
 def get_words(request, id):
     try:
         words = MyWord.objects.filter(file_id=id).values_list('name', flat=True)  # values_list('number', flat=True)
@@ -190,6 +195,29 @@ def pdf2html(file_obj):
 
     return
 
+index_dir = os.path.join(settings.BASE_DIR, "whoosh_index")
+
+myindex = open_dir(index_dir)
+
+
+def search_it(keyword):
+    """
+    使用前需要执行
+    python manage.py rebuild_index
+    :param keyword:
+    :return:
+    """
+    qp = QueryParser('text', schema=myindex.schema)  # text: 创建的index的字段的名字
+    query = qp.parse(keyword)
+    # mp = MultifieldParser(
+    #     ['text'], schema=myindex.schema, fieldboosts={'title': 5.0})
+    # query = mp.parse(q)
+    with myindex.searcher() as searcher:
+        results = searcher.search(query, terms=True)
+        print(results)
+        for res in results:
+            print(res)
+    return results
 
 # def read_pdf(file_obj):
 #     path = file_obj.file.path

@@ -2,6 +2,7 @@
     <div class="demo-split">
         <Button type="primary" v-on:click="transhandler">翻译</Button>
         <Button type="primary" v-on:click="convertpdf">导出为pdf</Button>
+        <Button type="primary" v-on:click="wordCounter">单词数量统计</Button>
         <!--<Button type="primary" v-on:click="changer">{{change_text}}</Button>-->
         <Split v-model="split1" :mode="mode">
             <div :slot="artical_state" class="demo-split-pane">
@@ -421,7 +422,7 @@
                         '|---|---|\n'
                     for(var j=0; j< words_len;j++){
 
-                        this.text += `|${new_words[j]}|${new_trans[j].replace(/\n/g,"<br>")}|\n`
+                        this.text += `|${new_words[j]}|${new_trans[j].replace(/\n/g," ")}|\n`
                     }
                 })
             },
@@ -480,6 +481,9 @@
             },
             convertpdf(){
                 window.open("http://coolaf.com/tool/md");
+            },
+            wordCounter(){
+                window.open("https://www.amz123.com/wordcounter.html")
             }
         }
     }
