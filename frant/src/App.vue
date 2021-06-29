@@ -15,7 +15,15 @@
                        bordered=false
                        @on-save="handleOnSave"
                />
-            </div>
+            <MarkdownPro
+                    autoSave=true
+                    v-model="text"
+                    ref="markchange"
+                    height="mark_heigh"
+                    bordered=false
+                    @on-save="handleOnSave"
+            />
+    </div>
             <div :slot="word_state" class="demo-split-pane" id="word_list" >
 
                 <Tag class="tag" v-for="(item, index) in Tags"
@@ -150,7 +158,12 @@
             const {status, result} = res.body;
             var phonetic = 'sorry';
             if (status == 'ok') {
-                phonetic = result.phonetic
+                if(result){
+                    phonetic = result.phonetic
+                }else {
+                    phonetic = ''
+                }
+
             }
             rt.innerText = `/${phonetic}/`;
             rt.classList.add("phonetic");
@@ -301,15 +314,15 @@
 
         data() {
             return {
-                split1: 0.9,
+                split1: 0.1,
                 transhandler:this.translation,
                 text:'解析中',
                 show: true,
                 mark_heigh:'2000',
                 change_text: '上下切换',
-                mode: 'horizontal',
-                artical_state: 'left',
-                word_state: 'right',
+                mode: 'vertical',
+                artical_state: 'bottom',
+                word_state: 'top',
                 Tags:[],
                 Tags_index:[],
                 highlighter:highlighter
@@ -332,33 +345,33 @@
 
                     this.text += '\n\n---\n';
 
-                    this.text+='\n| 字段        | 解释                                                       |\n' +
-                    '| ----------- | ---------------------------------------------------------- |\n' +
-                    '| word        | 单词名称                                                   |\n' +
-                    '| phonetic    | 音标，以英语英标为主                                       |\n' +
-                    '| definition  | 单词释义（英文），每行一个释义                             |\n' +
-                    '| translation | 单词释义（中文），每行一个释义                             |\n' +
-                    '| pos         | 词语位置，用 "/" 分割不同位置                              |\n' +
-                    '| collins     | 柯林斯星级                                                 |\n' +
-                    '| oxford      | 是否是牛津三千核心词汇                                     |\n' +
-                    '| tag         | 字符串标签：zk/中考，gk/高考，cet4/四级 等等标签，空格分割 |\n' +
-                    '| bnc         | 英国国家语料库词频顺序                                     |\n' +
-                    '| frq         | 当代语料库词频顺序                                         |\n' +
-                    '| exchange    | 时态复数等变换，使用 "/" 分割不同项目，见后面表格          |\n' +
-                    '| detail      | json 扩展信息，字典形式保存例句（待添加）                  |\n' +
-                    '| audio       | 读音音频 url （待添加）                                    |\n\n'
-
-                this.text += '| 类型 | 说明                                                       |\n' +
-                    '| ---- | ---------------------------------------------------------- |\n' +
-                    '| p    | 过去式（did）                                              |\n' +
-                    '| d    | 过去分词（done）                                           |\n' +
-                    '| i    | 现在分词（doing）                                          |\n' +
-                    '| 3    | 第三人称单数（does）                                       |\n' +
-                    '| r    | 形容词比较级（-er）                                        |\n' +
-                    '| t    | 形容词最高级（-est）                                       |\n' +
-                    '| s    | 名词复数形式                                               |\n' +
-                    '| 0    | Lemma，如 perceived 的 Lemma 是 perceive                   |\n' +
-                    '| 1    | Lemma 的变换形式，比如 s 代表 apples 是其 lemma 的复数形式 |\n\n'
+                //     this.text+='\n| 字段        | 解释                                                       |\n' +
+                //     '| ----------- | ---------------------------------------------------------- |\n' +
+                //     '| word        | 单词名称                                                   |\n' +
+                //     '| phonetic    | 音标，以英语英标为主                                       |\n' +
+                //     '| definition  | 单词释义（英文），每行一个释义                             |\n' +
+                //     '| translation | 单词释义（中文），每行一个释义                             |\n' +
+                //     '| pos         | 词语位置，用 "/" 分割不同位置                              |\n' +
+                //     '| collins     | 柯林斯星级                                                 |\n' +
+                //     '| oxford      | 是否是牛津三千核心词汇                                     |\n' +
+                //     '| tag         | 字符串标签：zk/中考，gk/高考，cet4/四级 等等标签，空格分割 |\n' +
+                //     '| bnc         | 英国国家语料库词频顺序                                     |\n' +
+                //     '| frq         | 当代语料库词频顺序                                         |\n' +
+                //     '| exchange    | 时态复数等变换，使用 "/" 分割不同项目，见后面表格          |\n' +
+                //     '| detail      | json 扩展信息，字典形式保存例句（待添加）                  |\n' +
+                //     '| audio       | 读音音频 url （待添加）                                    |\n\n'
+                //
+                // this.text += '| 类型 | 说明                                                       |\n' +
+                //     '| ---- | ---------------------------------------------------------- |\n' +
+                //     '| p    | 过去式（did）                                              |\n' +
+                //     '| d    | 过去分词（done）                                           |\n' +
+                //     '| i    | 现在分词（doing）                                          |\n' +
+                //     '| 3    | 第三人称单数（does）                                       |\n' +
+                //     '| r    | 形容词比较级（-er）                                        |\n' +
+                //     '| t    | 形容词最高级（-est）                                       |\n' +
+                //     '| s    | 名词复数形式                                               |\n' +
+                //     '| 0    | Lemma，如 perceived 的 Lemma 是 perceive                   |\n' +
+                //     '| 1    | Lemma 的变换形式，比如 s 代表 apples 是其 lemma 的复数形式 |\n\n'
                 });
 
                 var words = []
@@ -464,8 +477,8 @@
             },
             //点击新增子组件
             add(tag){
-                        this.Tags_index[tag.id] = this.Tags.length;
-                        this.Tags.push(tag)
+                this.Tags_index[tag.id] = this.Tags.length;
+                this.Tags.push(tag)
             },
             // //删除子组件
             remove(n){

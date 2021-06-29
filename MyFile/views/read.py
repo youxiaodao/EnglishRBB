@@ -21,7 +21,6 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.layout import LTTextBoxHorizontal, LAParams
 from pdfminer.pdfinterp import PDFTextExtractionNotAllowed
-from django.contrib.auth.decorators import login_required
 
 
 def parse(DataIO, save_path):
@@ -70,9 +69,10 @@ def parse(DataIO, save_path):
                     print("Failed")
         return text
 
+
 read_page = 2
 
-@login_required
+
 def reading(request, id):
     try:
         file_obj = UploadFile.objects.get(id=id)
@@ -90,7 +90,6 @@ def reading(request, id):
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return HttpResponse(res, headers={"Access-Control-Allow-Origin": "*"})
 
-@login_required
 def mark_save(request, id):
     try:
         file_obj = UploadFile.objects.get(id=id)
@@ -104,13 +103,11 @@ def mark_save(request, id):
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return HttpResponse('ok', headers={"Access-Control-Allow-Origin": "*"})
 
-@login_required
 def search_word(request, id):
     text = request.POST.get('text', None)
-    print(text)
-
     from ECDICT.stardict import StarDict
-    MyDict = StarDict('D:\\any_code\EnglishRBB\ECDICT\stardict.db')
+    path = settings.BASE_DIR + '/ECDICT/stardict.db'
+    MyDict = StarDict(path)
     res = MyDict.query(text.strip())
     print(res)
 
@@ -118,7 +115,7 @@ def search_word(request, id):
         'result': res,
         'status': 'ok'
     }, headers={"Access-Control-Allow-Origin": "*"})
-@login_required
+
 def word_save(request, id):
     """
 
@@ -139,7 +136,6 @@ def word_save(request, id):
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return HttpResponse('ok', headers={"Access-Control-Allow-Origin": "*"})
 
-@login_required
 def word_del(request, id):
     """
 
@@ -156,7 +152,7 @@ def word_del(request, id):
         traceback.print_exc()
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return HttpResponse('ok', headers={"Access-Control-Allow-Origin": "*"})
-@login_required
+
 def get_trans(request, id):
     try:
         from ECDICT.stardict import StarDict
@@ -164,15 +160,16 @@ def get_trans(request, id):
         MyDict = StarDict(path)
         words = MyWord.objects.filter(file_id=id).values_list('name', flat=True)  # values_list('number', flat=True)
         res = MyDict.query_batch(list(words))
+
     except Exception as e:
         traceback.print_exc()
         return HttpResponse(traceback.format_exc(), headers={"Access-Control-Allow-Origin": "*"})
     return JsonResponse({
         'result': res,
+        'exercise': '',
         'status': 'ok'
     }, headers={"Access-Control-Allow-Origin": "*"})
 
-@login_required
 def get_words(request, id):
     try:
         words = MyWord.objects.filter(file_id=id).values_list('name', flat=True)  # values_list('number', flat=True)
@@ -184,6 +181,7 @@ def get_words(request, id):
         'status': 'ok'
     }, headers={"Access-Control-Allow-Origin": "*"})
 
+
 def pdf2html(file_obj):
     html_name = f'{file_obj.name}.html'
     file_path = file_obj.file.path
@@ -194,6 +192,7 @@ def pdf2html(file_obj):
         res = subprocess.run(cmd)
 
     return
+
 
 index_dir = os.path.join(settings.BASE_DIR, "whoosh_index")
 
